@@ -10,47 +10,76 @@ float Rrpm = 0;
 float Lrpm = 0;
 
 task main(){
-  SensorValue[rightEncoder] = 0;
-  SensorValue[leftEncoder] = 0;
+	bool isDriverActive = true;
 
-  while(true){
-    SensorValue[leftEncoder] = 0;
-    SensorValue[rightEncoder] = 0;
-    delay(50);
-    Rrpm = abs(SensorValue[rightEncoder])/0.050;
-    Lrpm = abs(SensorValue[leftEncoder])/0.050;
-    if(Lrpm > Rrpm)
-    {
-    	rightSpeed++;
-    	motor[rightMotor] = rightSpeed;
-    	leftSpeed--;
-    	motor[leftMotor] = leftSpeed;
-    }
-    if(Lrpm < Rrpm)
-    {
-    	leftSpeed++;
-    	motor[leftMotor] = leftSpeed;
-    	rightSpeed--;
-    	motor[rightMotor] = rightSpeed;
-    }
-    if(Lrpm == Rrpm)
-    {
-      leftSpeed = 110;
-    	rightSpeed = 110;
-    	motor[rightMotor] = rightSpeed;
-    	motor[leftMotor] = leftSpeed;
-    }
-    if(rightSpeed > 127){
-      rightSpeed = 127;
-    }
-    if(leftSpeed > 127){
-      leftSpeed = 127;
-    }
-    if(rightSpeed < 0){
-      rightSpeed = 0;
-    }
-    if(leftSpeed < 0){
-      leftSpeed = 0;
-    }
-  }
+	while(isDriverActive){
+		motor[leftMotor] = vexRT[Ch3];
+		motor[rightMotor] = vexRT[Ch2];
+
+		clearLCDLine(0);
+		clearLCDLine(1);
+		displayLCDString(0,0,"Lspd");
+		displayLCDNumber(0,5,vexRT[Ch3]);
+		displayLCDString(0,9,"Rspd");
+		displayLCDNumber(0,13,vexRT[Ch2]);
+		if(vexRT[Btn6U] == 1 ){
+			isDriverActive = false;
+			delay(1000);
+		}
+	}
+
+
+	while(!isDriverActive){
+		SensorValue[leftEncoder] = 0;
+		SensorValue[rightEncoder] = 0;
+		delay(100);
+		Rrpm = abs(SensorValue[rightEncoder])/0.100;
+		Lrpm = abs(SensorValue[leftEncoder])/0.100;
+		if(Lrpm > Rrpm)
+		{
+			rightSpeed++;
+			motor[rightMotor] = rightSpeed;
+			leftSpeed--;
+			motor[leftMotor] = leftSpeed;
+		}
+		if(Lrpm < Rrpm)
+		{
+			leftSpeed++;
+			motor[leftMotor] = leftSpeed;
+			rightSpeed--;
+			motor[rightMotor] = rightSpeed;
+		}
+		if(Lrpm == Rrpm)
+		{
+			leftSpeed = 110;
+			rightSpeed = 110;
+			motor[rightMotor] = rightSpeed;
+			motor[leftMotor] = leftSpeed;
+		}
+		if(rightSpeed > 127){
+			rightSpeed = 127;
+		}
+		if(leftSpeed > 127){
+			leftSpeed = 127;
+		}
+		if(rightSpeed < 0){
+			rightSpeed = 0;
+		}
+		if(leftSpeed < 0){
+			leftSpeed = 0;
+		}
+		if(vexRT[Btn6U] == 1){
+			isDriverActive = true;
+		}
+		clearLCDLine(0);
+		clearLCDLine(1);
+		displayLCDString(0,0,"Lspd");
+		displayLCDNumber(0,5,leftSpeed);
+		displayLCDString(0,9,"Rspd");
+		displayLCDNumber(0,13,rightSpeed);
+		displayLCDString(1,0,"Lrpm");
+		displayLCDNumber(1,5,Lrpm);
+		displayLCDString(1,9,"Rrpm");
+		displayLCDNumber(1,13,Rrpm);
+	}
 }
