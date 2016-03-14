@@ -9,7 +9,7 @@ float Rrpm = 0;
 float Lrpm = 0;
 
 task main(){
-	bool isDriverActive = true;
+	bool isDriverActive = false;
 
 	while(isDriverActive){
 		motor[leftMotor] = vexRT[Ch3];
@@ -29,14 +29,15 @@ task main(){
 
 int ultraVal;
 	while(!isDriverActive){
-		ultraVal = SensorValue[ultra]
-		if(ultraVal < 17){
+		ultraVal = SensorValue[ultra];
+		if(ultraVal < 127){
 			if(ultraVal <= 2){
-				motor[motorDrive]=0;
-				motor[motorSteer]=0;
+				motor[leftMotor]=0;
+				motor[rightMotor]=0;
 			}
 			else{
-				motor[motorDrive] = 20;
+				motor[leftMotor] = ultraVal;
+				motor[rightMotor] = ultraVal;
 			}
 		}
 		else{
